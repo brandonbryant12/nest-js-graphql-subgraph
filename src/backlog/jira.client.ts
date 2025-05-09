@@ -1,4 +1,3 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { Injectable, Logger } from '@nestjs/common';
 
 interface TokenCache {
@@ -30,7 +29,6 @@ interface AccessTokenResponse {
 @Injectable()
 export class JiraClient {
   private readonly logger = new Logger(JiraClient.name);
-  private readonly http: AxiosInstance;
   private cache: TokenCache = { token: null, expiresAt: 0 };
 
   constructor() {
@@ -39,7 +37,6 @@ export class JiraClient {
       this.logger.error('JIRA_BASE_URL environment variable is not set.');
       throw new Error('JIRA_BASE_URL environment variable is not set.');
     }
-    this.http = axios.create({ baseURL: jiraBaseUrl });
   }
 
   private async getAccessToken(): Promise<string> {
@@ -56,33 +53,60 @@ export class JiraClient {
       throw new Error('OAuth environment variables are not fully set.');
     }
 
-    const tokenResp: AxiosResponse<AccessTokenResponse> =
-      await axios.post<AccessTokenResponse>(
-        oauthUrl,
-        {
-          grant_type: 'client_credentials',
-          client_id: clientId,
-          client_secret: clientSecret,
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
+    const response = await fetch(oauthUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        grant_type: 'client_credentials',
+        client_id: clientId,
+        client_secret: clientSecret,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      this.logger.error(
+        `Failed to get access token: ${response.status} ${response.statusText} - ${errorText}`,
       );
-    const { access_token } = tokenResp.data;
+      throw new Error(
+        `Failed to get access token: ${response.status} ${response.statusText}`,
+      );
+    }
+
+    const data: AccessTokenResponse = await response.json();
+
+    const { access_token } = data;
     this.cache = { token: access_token, expiresAt: now + 55 * 60 * 1000 };
     return access_token;
   }
 
   async fetchIssues(projectKey: string): Promise<JiraIssue[]> {
     const token = await this.getAccessToken();
-    const issuesResp: AxiosResponse<SearchIssuesResponse> =
-      await this.http.post<SearchIssuesResponse>(
-        '/issues',
-        { projectKey },
-        { headers: { Authorization: `Bearer ${token}` } },
+    const jiraBaseUrl = process.env.JIRA_BASE_URL as string;
+
+    const response = await fetch(`${jiraBaseUrl}/issues`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ projectKey }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      this.logger.error(
+        `Failed to fetch issues: ${response.status} ${response.statusText} - ${errorText}`,
       );
-    return issuesResp.data.issues ?? [];
+      throw new Error(
+        `Failed to fetch issues: ${response.status} ${response.statusText}`,
+      );
+    }
+
+    const data: SearchIssuesResponse = await response.json();
+
+    return data.issues ?? [];
   }
 }
