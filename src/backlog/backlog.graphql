@@ -1,0 +1,15 @@
+type Issue {
+  name: String
+  iconUrl: String
+}
+
+type Backlog @key(fields: "id") {
+  id: ID!
+  stories: [Issue]
+  epics: [Issue]
+  bugs: [Issue]
+}
+
+type Query {
+  backlog(id: ID!): Backlog
+}
