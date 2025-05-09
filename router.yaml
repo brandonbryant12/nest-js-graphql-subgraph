@@ -1,0 +1,8 @@
+supergraph:
+  introspection: true
+  listen: 0.0.0.0:4000
+  path: /graphql
+telemetry:
+  instrumentation:
+    spans:
+      mode: spec_compliant

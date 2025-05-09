@@ -1,15 +1,20 @@
+extend schema
+  @link(url: "https://specs.apollo.dev/federation/v2.7", import: ["@key", "@requires", "@external"])
+
 type Issue {
   name: String
   iconUrl: String
 }
 
-type Backlog @key(fields: "id") {
+type Backlog {
   id: ID!
   stories: [Issue]
   epics: [Issue]
   bugs: [Issue]
 }
 
-type Query {
-  backlog(id: ID!): Backlog
+extend type Application @key(fields: "id") {
+  id: ID! @external
+  agileEntityName: String @external
+  backlog: Backlog @requires(fields: "agileEntityName")
 }

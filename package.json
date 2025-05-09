@@ -11,6 +11,8 @@
     "start": "nest start",
     "start:backlog": "ts-node -r dotenv/config -r tsconfig-paths/register src/backlog/main.backlog.ts",
     "start:subgraphs": "npm run start:backlog",
+    "dev:rover": "APOLLO_TELEMETRY_DISABLED=1 rover dev --supergraph-config ./supergraph.yaml --router-config ./router.yaml",
+    "compose:supergraph": "rover supergraph compose --config ./supergraph.yaml --output ./supergraph.graphql",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",

@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { BacklogResolver } from './backlog.resolver';
+import { BacklogResolver, ApplicationResolver } from './backlog.resolver';
 import { BacklogService } from './backlog.service';
 import { BacklogRepository } from './backlog.repository';
 import { JiraClient } from './jira.client';
@@ -8,6 +8,7 @@ import { MockJiraClient } from './mock-jira.client';
 @Module({
   providers: [
     BacklogResolver,
+    ApplicationResolver,
     BacklogService,
     BacklogRepository,
     {

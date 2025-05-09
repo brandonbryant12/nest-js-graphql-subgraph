@@ -1,0 +1,15 @@
+# supergraph-config.yaml
+federation_version: 2
+subgraphs:
+  backlog:
+    # The routing_url is still essential for the Apollo Router at runtime
+    routing_url: http://localhost:3001/graphql
+    schema:
+      # Path to your backlog subgraph's schema file
+      file: /Users/brandon/Development/nest-js-graphql-subgraph/src/backlog/backlog.graphql
+  catalog:
+    # The routing_url is still essential for the Apollo Router at runtime
+    routing_url: http://localhost:7007/api/catalog/graphql
+    schema:
+      # Path to your catalog subgraph's schema file
+      file: /Users/brandon/Development/my-backstage/plugins/catalog-backend-module-catalog-graphql/schema.graphql
