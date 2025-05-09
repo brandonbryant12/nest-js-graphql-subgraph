@@ -59,12 +59,16 @@ export class JiraClient {
     const tokenResp: AxiosResponse<AccessTokenResponse> =
       await axios.post<AccessTokenResponse>(
         oauthUrl,
-        new URLSearchParams({
+        {
           grant_type: 'client_credentials',
           client_id: clientId,
           client_secret: clientSecret,
-        }),
-        { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
       );
     const { access_token } = tokenResp.data;
     this.cache = { token: access_token, expiresAt: now + 55 * 60 * 1000 };
