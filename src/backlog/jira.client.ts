@@ -85,14 +85,19 @@ export class JiraClient {
   async fetchIssues(projectKey: string): Promise<JiraIssue[]> {
     const token = await this.getAccessToken();
     const jiraBaseUrl = process.env.JIRA_BASE_URL as string;
+    const jql = `project = "${projectKey}" AND statusCategory != Done`;
 
-    const response = await fetch(`${jiraBaseUrl}/issues`, {
+    const response = await fetch(`${jiraBaseUrl}/search`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ projectKey }),
+      body: JSON.stringify({
+        jql,
+        maxResults: 100,
+        fields: ['summary', 'issuetype', 'status'],
+      }),
     });
 
     if (!response.ok) {
