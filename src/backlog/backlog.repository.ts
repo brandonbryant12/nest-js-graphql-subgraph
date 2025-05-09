@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { JiraClient } from './jira.client';
+import { JiraClient, JiraIssue } from './jira.client';
 
 export interface Issue {
   name: string;
@@ -21,19 +21,19 @@ export class BacklogRepository {
     const rawIssues = await this.jira.fetchIssues(projectKey);
     if (!rawIssues.length) return undefined;
 
-    const toIssue = (i: any): Issue => ({
+    const toIssue = (i: JiraIssue): Issue => ({
       name: i.fields?.summary ?? i.key,
       iconUrl: i.fields?.issuetype?.iconUrl ?? '',
     });
 
     const stories = rawIssues
-      .filter((i: any) => i.fields?.issuetype?.name === 'Story')
+      .filter((i) => i.fields?.issuetype?.name === 'Story')
       .map(toIssue);
     const epics = rawIssues
-      .filter((i: any) => i.fields?.issuetype?.name === 'Epic')
+      .filter((i) => i.fields?.issuetype?.name === 'Epic')
       .map(toIssue);
     const bugs = rawIssues
-      .filter((i: any) => i.fields?.issuetype?.name === 'Bug')
+      .filter((i) => i.fields?.issuetype?.name === 'Bug')
       .map(toIssue);
 
     return { id: projectKey, stories, epics, bugs };
