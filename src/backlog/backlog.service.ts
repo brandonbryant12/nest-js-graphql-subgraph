@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { BacklogRepository, BacklogEntity, Issue } from './backlog.repository';
+import { BacklogRepository, BacklogEntity } from './backlog.repository';
+import { IssueSummary } from './types';
 
 @Injectable()
 export class BacklogService {
@@ -9,15 +10,7 @@ export class BacklogService {
     return this.repo.findById(id);
   }
 
-  getStories(backlog: BacklogEntity): Issue[] {
-    return backlog.stories;
-  }
-
-  getEpics(backlog: BacklogEntity): Issue[] {
-    return backlog.epics;
-  }
-
-  getBugs(backlog: BacklogEntity): Issue[] {
-    return backlog.bugs;
+  getIssueSummaries(backlog: BacklogEntity): IssueSummary[] {
+    return backlog.issueSummaries;
   }
 }

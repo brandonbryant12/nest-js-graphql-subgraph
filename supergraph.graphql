@@ -25,7 +25,7 @@ type Application
   @join__type(graph: BACKLOG, key: "id", extension: true)
   @join__type(graph: CATALOG, key: "id")
 {
-  id: ID!
+  id: ID @join__field(graph: BACKLOG, type: "ID") @join__field(graph: CATALOG, type: "ID!")
   agileEntityName: String @join__field(graph: BACKLOG, external: true) @join__field(graph: CATALOG)
   backlog: Backlog @join__field(graph: BACKLOG, requires: "agileEntityName")
   name: String @join__field(graph: CATALOG)
@@ -33,19 +33,18 @@ type Application
 }
 
 type Backlog
-  @join__type(graph: BACKLOG)
+  @join__type(graph: BACKLOG, key: "id")
 {
-  id: ID!
-  stories: [Issue]
-  epics: [Issue]
-  bugs: [Issue]
+  id: ID
+  issueSummaries: [IssueSummary]
 }
 
-type Issue
+type IssueSummary
   @join__type(graph: BACKLOG)
 {
-  name: String
-  iconUrl: String
+  issueName: String
+  issueIconUrl: String
+  activeIssueCount: String
 }
 
 scalar join__DirectiveArguments
@@ -75,5 +74,6 @@ type Query
   @join__type(graph: BACKLOG)
   @join__type(graph: CATALOG)
 {
+  backlog(id: ID): Backlog @join__field(graph: BACKLOG)
   applicationById(id: ID!): Application @join__field(graph: CATALOG)
 }

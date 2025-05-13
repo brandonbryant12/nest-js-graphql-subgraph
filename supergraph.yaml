@@ -13,3 +13,9 @@ subgraphs:
     schema:
       # Path to your catalog subgraph's schema file
       file: /Users/brandon/Development/my-backstage/plugins/catalog-backend-module-catalog-graphql/schema.graphql
+  workforce:
+    # The routing_url is still essential for the Apollo Router at runtime
+    routing_url: http://localhost:3002/graphql
+    schema:
+      # Path to your workforce subgraph's schema file
+      file: /Users/brandon/Development/nest-js-graphql-subgraph/src/workforce/workforce.graphql

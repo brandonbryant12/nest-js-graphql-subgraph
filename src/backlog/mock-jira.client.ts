@@ -1,34 +1,27 @@
 import { Injectable } from '@nestjs/common';
-import { JiraIssue } from './jira.client';
+import { IssueSummary } from './types';
 
 @Injectable()
 export class MockJiraClient {
   // eslint-disable-next-line @typescript-eslint/require-await
-  async fetchIssues(projectKey: string): Promise<JiraIssue[]> {
+  async fetchIssueSummariesByProject(
+    projectKey: string,
+  ): Promise<IssueSummary[]> {
     return [
       {
-        key: `${projectKey}-1`,
-        fields: {
-          summary: 'Mock Story',
-          issuetype: {
-            name: 'Story',
-            iconUrl: 'https://example.com/story.png',
-          },
-        },
+        issueName: 'Story',
+        issueIconUrl: `https://mock-jira.com/${projectKey}/icons/story.png`,
+        activeIssueCount: '15',
       },
       {
-        key: `${projectKey}-2`,
-        fields: {
-          summary: 'Mock Epic',
-          issuetype: { name: 'Epic', iconUrl: 'https://example.com/epic.png' },
-        },
+        issueName: 'Bug',
+        issueIconUrl: `https://mock-jira.com/${projectKey}/icons/bug.png`,
+        activeIssueCount: '7',
       },
       {
-        key: `${projectKey}-3`,
-        fields: {
-          summary: 'Mock Bug',
-          issuetype: { name: 'Bug', iconUrl: 'https://example.com/bug.png' },
-        },
+        issueName: 'Task',
+        issueIconUrl: `https://mock-jira.com/${projectKey}/icons/task.png`,
+        activeIssueCount: '10',
       },
     ];
   }

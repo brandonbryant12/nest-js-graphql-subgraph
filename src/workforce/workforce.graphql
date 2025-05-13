@@ -1,0 +1,21 @@
+extend schema
+  @link(url: "https://specs.apollo.dev/federation/v2.7", import: ["@key", "@requires", "@external"])
+
+type TeamMember {
+   name: String
+   role: String
+}
+
+type TeamStructure @key(fields: "id") {
+   id: ID!
+   teamMembers: [TeamMember]
+}
+
+extend type Application @key(fields: "id") {
+  id: ID! @external
+  team: TeamStructure @requires(fields: "id")
+}
+
+type Query {
+  team(id: ID!): TeamStructure
+}

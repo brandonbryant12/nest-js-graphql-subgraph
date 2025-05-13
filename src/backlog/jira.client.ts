@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-
+import { IssueSummary } from './types';
 interface TokenCache {
   token: string | null;
   expiresAt: number;
@@ -82,7 +82,9 @@ export class JiraClient {
     return access_token;
   }
 
-  async fetchIssues(projectKey: string): Promise<JiraIssue[]> {
+  async fetchIssueSummariesByProject(
+    projectKey: string,
+  ): Promise<IssueSummary[]> {
     const token = await this.getAccessToken();
     const jiraBaseUrl = process.env.JIRA_BASE_URL as string;
     const jql = `project = "${projectKey}" AND statusCategory != Done`;
@@ -95,23 +97,53 @@ export class JiraClient {
       },
       body: JSON.stringify({
         jql,
-        maxResults: 100,
-        fields: ['summary', 'issuetype', 'status'],
+        maxResults: 500,
+        fields: ['issuetype'],
       }),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
       this.logger.error(
-        `Failed to fetch issues: ${response.status} ${response.statusText} - ${errorText}`,
+        `Failed to fetch issue summaries: ${response.status} ${response.statusText} - ${errorText}`,
       );
       throw new Error(
-        `Failed to fetch issues: ${response.status} ${response.statusText}`,
+        `Failed to fetch issue summaries: ${response.status} ${response.statusText}`,
       );
     }
 
     const data: SearchIssuesResponse = await response.json();
+    const rawIssues = data.issues ?? [];
 
-    return data.issues ?? [];
+    if (!rawIssues.length) {
+      return [];
+    }
+
+    const groupedIssues = rawIssues.reduce(
+      (acc, issue) => {
+        const typeName = issue.fields?.issuetype?.name;
+        if (typeName) {
+          if (!acc[typeName]) {
+            acc[typeName] = {
+              iconUrl: issue.fields?.issuetype?.iconUrl,
+              issues: [],
+            };
+          }
+          acc[typeName].issues.push(issue);
+        }
+        return acc;
+      },
+      {} as Record<string, { iconUrl?: string; issues: JiraIssue[] }>,
+    );
+
+    const issueSummaries: IssueSummary[] = Object.entries(groupedIssues).map(
+      ([issueName, groupData]) => ({
+        issueName,
+        issueIconUrl: groupData.iconUrl,
+        activeIssueCount: groupData.issues.length.toString(),
+      }),
+    );
+
+    return issueSummaries;
   }
 }

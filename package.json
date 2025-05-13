@@ -10,7 +10,8 @@
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:backlog": "ts-node -r dotenv/config -r tsconfig-paths/register src/backlog/main.backlog.ts",
-    "start:subgraphs": "npm run start:backlog",
+    "start:workforce": "ts-node -r dotenv/config -r tsconfig-paths/register src/workforce/main.workforce.ts",
+    "start:subgraphs": "concurrently \"npm run start:backlog\" \"npm run start:workforce\"",
     "dev:rover": "APOLLO_TELEMETRY_DISABLED=1 rover dev --supergraph-config ./supergraph.yaml --router-config ./router.yaml",
     "compose:supergraph": "rover supergraph compose --config ./supergraph.yaml --output ./supergraph.graphql",
     "start:dev": "nest start --watch",
@@ -24,16 +25,16 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@nestjs/common": "^11.0.1",
-    "@nestjs/core": "^11.0.1",
-    "@nestjs/platform-express": "^11.0.1",
-    "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1",
     "@apollo/server": "^4.12.0",
     "@apollo/subgraph": "^2.10.2",
     "@nestjs/apollo": "^13.1.0",
+    "@nestjs/common": "^11.0.1",
+    "@nestjs/core": "^11.0.1",
     "@nestjs/graphql": "^13.1.0",
-    "graphql": "^16.11.0"
+    "@nestjs/platform-express": "^11.0.1",
+    "graphql": "^16.11.0",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
@@ -47,6 +48,7 @@
     "@types/jest": "^29.5.14",
     "@types/node": "^22.10.7",
     "@types/supertest": "^6.0.2",
+    "concurrently": "^9.1.2",
     "dotenv": "^16.4.5",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",

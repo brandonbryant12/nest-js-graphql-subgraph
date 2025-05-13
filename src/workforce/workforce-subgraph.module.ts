@@ -1,13 +1,10 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { GraphQLModule } from '@nestjs/graphql';
 import {
   ApolloFederationDriver,
   ApolloFederationDriverConfig,
 } from '@nestjs/apollo';
-import { BacklogModule } from './backlog/backlog.module';
-import { WorkforceModule } from './workforce/workforce.module';
+import { WorkforceModule } from './workforce.module';
 
 @Module({
   imports: [
@@ -15,10 +12,7 @@ import { WorkforceModule } from './workforce/workforce.module';
       driver: ApolloFederationDriver,
       typePaths: ['./**/*.graphql'],
     }),
-    BacklogModule,
     WorkforceModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
-export class AppModule {}
+export class WorkforceSubgraphModule {}
