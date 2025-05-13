@@ -13,7 +13,7 @@ type TeamStructure @key(fields: "id") {
 
 extend type Application @key(fields: "id") {
   id: ID! @external
-  team: TeamStructure @requires(fields: "id")
+  team: TeamStructure
 }
 
 type Query {

@@ -5,8 +5,8 @@ import { TeamStructure } from './types';
 export class MockWorkforceClient {
   fetchTeamStructureById(id: string): Promise<TeamStructure | undefined> {
     const mockData: Record<string, TeamStructure> = {
-      'app-1': {
-        id: 'app-1',
+      'example-website': {
+        id: 'example-website',
         teamMembers: [
           { name: 'Alice', role: 'Developer' },
           { name: 'Bob', role: 'Lead' },

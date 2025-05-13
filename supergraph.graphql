@@ -24,18 +24,20 @@ directive @link(url: String, as: String, for: link__Purpose, import: [link__Impo
 type Application
   @join__type(graph: BACKLOG, key: "id", extension: true)
   @join__type(graph: CATALOG, key: "id")
+  @join__type(graph: WORKFORCE, key: "id", extension: true)
 {
-  id: ID @join__field(graph: BACKLOG, type: "ID") @join__field(graph: CATALOG, type: "ID!")
+  id: ID!
   agileEntityName: String @join__field(graph: BACKLOG, external: true) @join__field(graph: CATALOG)
   backlog: Backlog @join__field(graph: BACKLOG, requires: "agileEntityName")
   name: String @join__field(graph: CATALOG)
   description: String @join__field(graph: CATALOG)
+  team: TeamStructure @join__field(graph: WORKFORCE)
 }
 
 type Backlog
   @join__type(graph: BACKLOG, key: "id")
 {
-  id: ID
+  id: ID!
   issueSummaries: [IssueSummary]
 }
 
@@ -54,6 +56,7 @@ scalar join__FieldSet
 enum join__Graph {
   BACKLOG @join__graph(name: "backlog", url: "http://localhost:3001/graphql")
   CATALOG @join__graph(name: "catalog", url: "http://localhost:7007/api/catalog/graphql")
+  WORKFORCE @join__graph(name: "workforce", url: "http://localhost:3002/graphql")
 }
 
 scalar link__Import
@@ -73,7 +76,23 @@ enum link__Purpose {
 type Query
   @join__type(graph: BACKLOG)
   @join__type(graph: CATALOG)
+  @join__type(graph: WORKFORCE)
 {
-  backlog(id: ID): Backlog @join__field(graph: BACKLOG)
+  backlog(id: ID!): Backlog @join__field(graph: BACKLOG)
   applicationById(id: ID!): Application @join__field(graph: CATALOG)
+  team(id: ID!): TeamStructure @join__field(graph: WORKFORCE)
+}
+
+type TeamMember
+  @join__type(graph: WORKFORCE)
+{
+  name: String
+  role: String
+}
+
+type TeamStructure
+  @join__type(graph: WORKFORCE, key: "id")
+{
+  id: ID!
+  teamMembers: [TeamMember]
 }
