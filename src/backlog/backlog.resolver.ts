@@ -24,11 +24,12 @@ export class BacklogResolver {
 export class ApplicationResolver {
   constructor(private readonly backlogService: BacklogService) {}
 
-  backlog(
+  @ResolveField('backlog')
+  async backlog(
     @Parent() application: { agileEntityName?: string },
   ): Promise<BacklogEntity | undefined> {
     if (!application.agileEntityName) {
-      return undefined as any;
+      return undefined;
     }
     return this.backlogService.getBacklog(application.agileEntityName);
   }

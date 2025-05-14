@@ -16,6 +16,7 @@ export class TeamStructureResolver {
 export class ApplicationResolver {
   constructor(private readonly workforceService: WorkforceService) {}
 
+  @ResolveField('team')
   team(
     @Parent() application: { id: string },
   ): Promise<TeamStructure | undefined> {
@@ -25,12 +26,10 @@ export class ApplicationResolver {
 
 @Resolver()
 export class WorkforceQueryResolver {
-    constructor(private readonly workforceService: WorkforceService) {}
+  constructor(private readonly workforceService: WorkforceService) {}
 
-    @Query('team')
-    async teamById(
-        @Args('id') id: string,
-    ): Promise<TeamStructure | undefined> {
-        return this.workforceService.getTeamStructureById(id);
-    }
+  @Query('team')
+  async teamById(@Args('id') id: string): Promise<TeamStructure | undefined> {
+    return this.workforceService.getTeamStructureById(id);
+  }
 }

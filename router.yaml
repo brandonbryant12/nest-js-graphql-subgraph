@@ -2,7 +2,26 @@ supergraph:
   introspection: true
   listen: 0.0.0.0:4000
   path: /graphql
+
 telemetry:
   instrumentation:
     spans:
       mode: spec_compliant
+
+
+cors:
+  allow_credentials: true
+  allow_headers:
+    - authorization
+    - content-type
+    - apollographql-client-name
+    - apollographql-client-version
+  methods:
+    - GET
+    - POST
+    - OPTIONS
+  origins:
+    - http://localhost:3000
+    - http://localhost:7007
+    - http://localhost:7000
+    - http://127.0.0.1:3000
