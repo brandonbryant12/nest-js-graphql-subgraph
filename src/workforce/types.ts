@@ -1,9 +1,13 @@
-export interface TeamMember {
+export interface Associate {
   name: string;
   role: string;
+  description: string;
+  email: string;
+  imageUrl: string;
+  link: string;
 }
 
-export interface TeamStructure {
+export interface ApplicationTeam {
   id: string;
-  teamMembers: TeamMember[];
+  associates: Associate[];
 }

@@ -13,4 +13,8 @@ export class BacklogService {
   getIssueSummaries(backlog: BacklogEntity): IssueSummary[] {
     return backlog.issueSummaries;
   }
+
+  getBacklogUrl(backlog: BacklogEntity): string {
+    return backlog.backlogUrl;
+  }
 }

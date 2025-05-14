@@ -1,14 +1,14 @@
 import { Resolver, ResolveField, Parent, Query, Args } from '@nestjs/graphql';
 import { WorkforceService } from './workforce.service';
-import { TeamStructure, TeamMember } from './types';
+import { ApplicationTeam, Associate } from './types';
 
-@Resolver('TeamStructure')
-export class TeamStructureResolver {
+@Resolver('ApplicationTeam')
+export class ApplicationTeamResolver {
   constructor(private readonly workforceService: WorkforceService) {}
 
-  @ResolveField('teamMembers')
-  teamMembers(@Parent() teamStructure: TeamStructure): TeamMember[] {
-    return this.workforceService.getTeamMembers(teamStructure);
+  @ResolveField('associates')
+  teamMembers(@Parent() applicationTeam: ApplicationTeam): Associate[] {
+    return this.workforceService.getAssociates(applicationTeam);
   }
 }
 
@@ -19,8 +19,8 @@ export class ApplicationResolver {
   @ResolveField('team')
   team(
     @Parent() application: { id: string },
-  ): Promise<TeamStructure | undefined> {
-    return this.workforceService.getTeamStructureById(application.id);
+  ): Promise<ApplicationTeam | undefined> {
+    return this.workforceService.getApplicationTeamById(application.id);
   }
 }
 
@@ -28,8 +28,10 @@ export class ApplicationResolver {
 export class WorkforceQueryResolver {
   constructor(private readonly workforceService: WorkforceService) {}
 
-  @Query('team')
-  async teamById(@Args('id') id: string): Promise<TeamStructure | undefined> {
-    return this.workforceService.getTeamStructureById(id);
+  @Query('applicationTeam')
+  async applicationTeam(
+    @Args('id') id: string,
+  ): Promise<ApplicationTeam | undefined> {
+    return this.workforceService.getApplicationTeamById(id);
   }
 }

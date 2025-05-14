@@ -5,6 +5,7 @@ import { IssueSummary } from './types';
 export interface BacklogEntity {
   id: string;
   issueSummaries: IssueSummary[];
+  backlogUrl: string;
 }
 
 @Injectable()
@@ -14,6 +15,7 @@ export class BacklogRepository {
   async findById(projectKey: string): Promise<BacklogEntity | undefined> {
     const issueSummaries =
       await this.jira.fetchIssueSummariesByProject(projectKey);
-    return { id: projectKey, issueSummaries };
+    const backlogUrl = this.jira.getBacklogUrl(projectKey);
+    return { id: projectKey, issueSummaries, backlogUrl };
   }
 }

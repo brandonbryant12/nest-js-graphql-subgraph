@@ -137,13 +137,17 @@ export class JiraClient {
     );
 
     const issueSummaries: IssueSummary[] = Object.entries(groupedIssues).map(
-      ([issueName, groupData]) => ({
-        issueName,
-        issueIconUrl: groupData.iconUrl,
-        activeIssueCount: groupData.issues.length.toString(),
+      ([name, groupData]) => ({
+        name,
+        iconUrl: groupData.iconUrl,
+        count: groupData.issues.length.toString(),
       }),
     );
 
     return issueSummaries;
+  }
+
+  getBacklogUrl(projectKey: string) {
+    return `https://jira.example.com/${projectKey}`;
   }
 }

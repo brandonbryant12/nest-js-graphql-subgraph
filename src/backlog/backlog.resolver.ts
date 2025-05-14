@@ -7,6 +7,11 @@ import { IssueSummary } from './types';
 export class BacklogResolver {
   constructor(private readonly backlogService: BacklogService) {}
 
+  @ResolveField('backlogUrl')
+  backlogUrl(@Parent() backlog: BacklogEntity): string {
+    return this.backlogService.getBacklogUrl(backlog);
+  }
+
   @ResolveField('issueSummaries')
   issueSummaries(@Parent() backlog: BacklogEntity): IssueSummary[] {
     return this.backlogService.getIssueSummaries(backlog);

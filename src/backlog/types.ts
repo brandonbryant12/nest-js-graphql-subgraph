@@ -1,5 +1,5 @@
 export interface IssueSummary {
-  issueName: string;
-  issueIconUrl?: string;
-  activeIssueCount: string;
+  name: string;
+  iconUrl?: string;
+  count: string;
 }

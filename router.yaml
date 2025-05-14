@@ -25,3 +25,4 @@ cors:
     - http://localhost:7007
     - http://localhost:7000
     - http://127.0.0.1:3000
+    - https://studio.apollographql.com

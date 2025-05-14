@@ -9,20 +9,23 @@ export class MockJiraClient {
   ): Promise<IssueSummary[]> {
     return [
       {
-        issueName: 'Story',
-        issueIconUrl: `https://mock-jira.com/${projectKey}/icons/story.png`,
-        activeIssueCount: '15',
+        name: 'Story',
+        iconUrl: `https://mock-jira.com/${projectKey}/icons/story.png`,
+        count: '15',
       },
       {
-        issueName: 'Bug',
-        issueIconUrl: `https://mock-jira.com/${projectKey}/icons/bug.png`,
-        activeIssueCount: '7',
+        name: 'Bug',
+        iconUrl: `https://mock-jira.com/${projectKey}/icons/bug.png`,
+        count: '7',
       },
       {
-        issueName: 'Task',
-        issueIconUrl: `https://mock-jira.com/${projectKey}/icons/task.png`,
-        activeIssueCount: '10',
+        name: 'Task',
+        iconUrl: `https://mock-jira.com/${projectKey}/icons/task.png`,
+        count: '10',
       },
     ];
+  }
+  getBacklogUrl(projectKey: string) {
+    return `https://jira.example.com/${projectKey}`;
   }
 }

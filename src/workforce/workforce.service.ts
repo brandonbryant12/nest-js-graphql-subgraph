@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { WorkforceRepository } from './workforce.repository';
-import { TeamStructure, TeamMember } from './types';
+import { ApplicationTeam, Associate } from './types';
 
 @Injectable()
 export class WorkforceService {
   constructor(private readonly repo: WorkforceRepository) {}
 
-  getTeamStructureById(id: string): Promise<TeamStructure | undefined> {
+  getApplicationTeamById(id: string): Promise<ApplicationTeam | undefined> {
     return this.repo.findById(id);
   }
 
-  getTeamMembers(teamStructure: TeamStructure): TeamMember[] {
-    return teamStructure.teamMembers;
+  getAssociates(applicationTeam: ApplicationTeam): Associate[] {
+    return applicationTeam.associates;
   }
 }

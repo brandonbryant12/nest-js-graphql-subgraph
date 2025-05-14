@@ -31,22 +31,42 @@ type Application
   backlog: Backlog @join__field(graph: BACKLOG, requires: "agileEntityName")
   name: String @join__field(graph: CATALOG)
   description: String @join__field(graph: CATALOG)
-  team: TeamStructure @join__field(graph: WORKFORCE)
+  team: ApplicationTeam @join__field(graph: WORKFORCE)
+}
+
+type ApplicationTeam
+  @join__type(graph: WORKFORCE, key: "id")
+{
+  id: ID!
+  name: String
+  associates: [Associate!]!
+}
+
+type Associate
+  @join__type(graph: WORKFORCE)
+{
+  name: String!
+  description: String
+  email: String
+  role: String
+  imageUrl: String
+  link: String
 }
 
 type Backlog
   @join__type(graph: BACKLOG, key: "id")
 {
   id: ID!
-  issueSummaries: [IssueSummary]
+  backlogUrl: String!
+  issueSummaries: [IssueSummary!]!
 }
 
 type IssueSummary
   @join__type(graph: BACKLOG)
 {
-  issueName: String
-  issueIconUrl: String
-  activeIssueCount: String
+  name: String!
+  iconUrl: String!
+  count: String!
 }
 
 scalar join__DirectiveArguments
@@ -80,19 +100,5 @@ type Query
 {
   backlog(id: ID!): Backlog @join__field(graph: BACKLOG)
   applicationById(id: ID!): Application @join__field(graph: CATALOG)
-  team(id: ID!): TeamStructure @join__field(graph: WORKFORCE)
-}
-
-type TeamMember
-  @join__type(graph: WORKFORCE)
-{
-  name: String
-  role: String
-}
-
-type TeamStructure
-  @join__type(graph: WORKFORCE, key: "id")
-{
-  id: ID!
-  teamMembers: [TeamMember]
+  applicationTeam(id: ID!): ApplicationTeam @join__field(graph: WORKFORCE)
 }
